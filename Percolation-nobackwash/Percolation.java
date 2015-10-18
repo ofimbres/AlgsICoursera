@@ -52,19 +52,21 @@ public class Percolation {
         return ((i - 1) * size) + (j - 1);
     }
     
-    private int getRowCoordinate(int idx) {
-        return idx / size;
-    }
-    
-    private int getColumnCoordinate(int idx) {
-        return idx % size;
-    }
+    private int getRowCoordinate(int idx) { return idx / size; }
+    private int getColumnCoordinate(int idx) { return idx % size; }
     
     private int retrieveStatus(int q) {
         int root = sites.find(q);
         return grid[getRowCoordinate(root)][getColumnCoordinate(root)];
     }
     
+    private int connectToNeighbor(int p, int q, int neighborStatus) {
+        neighborStatus |= retrieveStatus(q);
+        sites.union(p, q);
+        
+        return neighborStatus;
+    }
+
     /**
      * open site (row i, column j) if it is not open already
      * @param i - row
@@ -75,57 +77,45 @@ public class Percolation {
         
         if (isOpen(i, j)) return;
         
-        // Check on sides
-        int p, q, root, ir, jr;
-        p = xyTo1D(i, j);
+        // check on neighbors
+        int p = xyTo1D(i, j);
+        int currentNeighborStatus = 0;
         
-        int[] status = new int[4];
+        // top
+        if (i > 1 && isOpen(i - 1, j))
+            currentNeighborStatus |=
+                connectToNeighbor(p, xyTo1D(i - 1, j), currentNeighborStatus);
         
-        // TOP
-        if (i > 1) {
-            if (isOpen(i - 1, j)) {
-                q = xyTo1D(i - 1, j);
-                status[0] = retrieveStatus(q);
-                sites.union(p, q);
-            }
-        }
+        // bottom
+        if (i < size && isOpen(i + 1, j))
+            currentNeighborStatus |=
+                connectToNeighbor(p, xyTo1D(i + 1, j), currentNeighborStatus);
         
-        // BOTTOM
-        if (i < size) {
-            if (isOpen(i + 1, j)) {
-                q = xyTo1D(i + 1, j);
-                status[1] = retrieveStatus(q);
-                sites.union(p, q);
-            }
-        }
+        // left
+        if (j > 1 && isOpen(i, j - 1))
+            currentNeighborStatus |=
+                connectToNeighbor(p, xyTo1D(i, j - 1), currentNeighborStatus);
         
-        // LEFT
-        if (j > 1) {
-            if (isOpen(i, j - 1)) {
-                q = xyTo1D(i, j - 1);
-                status[2] = retrieveStatus(q);
-                sites.union(p, q);
-            }
-        }
-        
-        // RIGHT
-        if (j < size) {
-            if (isOpen(i, j + 1)) {
-                q = xyTo1D(i, j + 1);
-                status[3] = retrieveStatus(q);
-                sites.union(p, q);
-            }
-        }
+        // right
+        if (j < size && isOpen(i, j + 1))
+            currentNeighborStatus |=
+                connectToNeighbor(p, xyTo1D(i, j + 1), currentNeighborStatus);
         
         grid[i - 1][j - 1] |= OPEN;
         
+        // we do a 5th find(S) to get the root of the newly
+        // generated connected component results from opening the site S
+        int root, ir, jr;
         root = sites.find(p);
         ir = getRowCoordinate(root);
         jr = getColumnCoordinate(root);
         
-        grid[ir][jr] |= grid[i - 1][j - 1];
-        grid[ir][jr] |= status[0] | status[1] | status[2] | status[3];
+        // finally we update the status of the new root by combining the old
+        // status information into the new root in constant time.
+        grid[ir][jr] |= grid[i - 1][j - 1] | currentNeighborStatus;
         
+        // we keep the status like connect to the top, connect to the bottom,
+        // making constant time operation in percolates operation
         if (!percolates && (grid[ir][jr] & (CONNECTTOTOP | CONNECTTOBOTTOM)) ==
             (CONNECTTOTOP | CONNECTTOBOTTOM))
             percolates = true;
