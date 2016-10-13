@@ -10,13 +10,13 @@ public class FastCollinearPoints {
         Point[] pointsCopy = Arrays.copyOf(points, points.length);
         Map<Double, List<Point>> foundSegments = new HashMap<Double, List<Point>>();
         
-        for (Point startPoint : pointsCopy) {
+        for (Point startPoint : points) {
             Arrays.sort(pointsCopy, startPoint.slopeOrder());
 
             double slope = 0;
             double previousSlope = Double.NEGATIVE_INFINITY;
             ArrayList<Point> slopePoints = new ArrayList<Point>();
-            
+
             for (int q = 1; q < pointsCopy.length; q++) {
                 slope = startPoint.slopeTo(pointsCopy[q]);
                 
@@ -42,8 +42,6 @@ public class FastCollinearPoints {
         }
     }
     
-    
-    
     private void addSegmentIfNew(Map<Double, List<Point>> foundSegments, double slope, ArrayList<Point> slopePoints) {           
         List<Point> endPoints = foundSegments.get(slope);
         Collections.sort(slopePoints);
@@ -59,7 +57,7 @@ public class FastCollinearPoints {
             segments.add(new LineSegment(startPoint, endPoint));
         } else {
             for (Point currentEndPoint : endPoints) {
-                if (currentEndPoint.compareTo(endPoint) == 0) return;
+                if (currentEndPoint.equals(endPoint)) return;
             }
                 
             endPoints.add(endPoint);

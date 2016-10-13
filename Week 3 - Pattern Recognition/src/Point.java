@@ -100,12 +100,14 @@ public class Point implements Comparable<Point> {
         return new SlopeOrderComparator();
     }
     
-    public class SlopeOrderComparator implements Comparator<Point> {
+    private class SlopeOrderComparator implements Comparator<Point> {
         public int compare(Point q1, Point q2) {
             double s1 = slopeTo(q1);
             double s2 = slopeTo(q2);
             
-            return ((Double)s1).compareTo(s2);
+            if (s1 < s2) return -1;
+            if (s1 > s2) return 1;
+            return 0;
         }
     }
 
