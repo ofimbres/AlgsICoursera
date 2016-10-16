@@ -10,7 +10,7 @@ public class Subset {
         RandomizedQueue<String> queue = new RandomizedQueue<String>();
         int n = 0, r;
         
-        while(!StdIn.isEmpty()) {
+        while (!StdIn.isEmpty()) {
             String input = StdIn.readString();
             n++;
             r = StdRandom.uniform(0, n);

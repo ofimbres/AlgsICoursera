@@ -7,8 +7,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int n;
     
     // construct an empty randomized queue
-    public RandomizedQueue() { 
-        s = (Item[])new Object[2];
+    public RandomizedQueue() {
+        s = (Item[]) new Object[2];
         n = 0;
     }
     
@@ -35,10 +35,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Item dequeue() {
         if (isEmpty()) { throw new NoSuchElementException("cannot remove item because deque is empty deque"); }
         
-        Item item = (Item)s[--n];
+        Item item = s[--n];
         
         int r = StdRandom.uniform(n + 1);
-        Item item2 = (Item)s[r];
+        Item item2 = s[r];
         
         s[r] = item;
         s[n] = null;
@@ -48,7 +48,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
     
     private void resize(int capacity) {
-        Item[] copy = (Item[])new Object[capacity];
+        Item[] copy = (Item[]) new Object[capacity];
         for (int i = 0; i < n; i++)
             copy[i] = s[i];
         s = copy;
@@ -60,7 +60,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NoSuchElementException("cannot get item because deque is empty deque");
         
         int r = StdRandom.uniform(n);
-        return (Item)s[r];
+        return s[r];
     }
     
     // return an independent iterator over items in random order 
@@ -75,7 +75,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         public RandomListIterator() {
             current = n;
             
-            ss = (Item[])new Object[n];
+            ss = (Item[]) new Object[n];
             for (int i = 0; i < n; i++) {
                 ss[i] = s[i];
             }

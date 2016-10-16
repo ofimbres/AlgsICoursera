@@ -1,33 +1,32 @@
 import java.util.NoSuchElementException;
 import java.util.Iterator;
-import edu.princeton.cs.algs4.StdOut;
 
 public class Deque<Item> implements Iterable<Item> {
     private Node first;
     private Node last;
-    private int N;
+    private int n;
     
     private class Node {
-        Item item;
-        Node previous;
-        Node next;
+        private Item item;
+        private Node previous;
+        private Node next;
     }
     
     // construct an empty deque
     public Deque() {
         first = null;
         last = null;
-        N = 0;
+        n = 0;
     }
     
     // is the deque empty?
     public boolean isEmpty() {
-        return N == 0; 
+        return n == 0; 
     }
     
     // return the number of items on the dequeue
     public int size() {
-        return N;
+        return n;
     }
     
     // add the item to the front
@@ -38,7 +37,8 @@ public class Deque<Item> implements Iterable<Item> {
         Node newNode = createNode(item);
         
         if (isEmpty()) {
-            first = last = newNode;
+            first = newNode;
+            last = newNode;
         }
         else {
             Node oldFirst = first;
@@ -46,7 +46,7 @@ public class Deque<Item> implements Iterable<Item> {
             newNode.next = oldFirst;
             first = newNode;
         }
-        N++;
+        n++;
     }
     
     // add the item to the end
@@ -57,14 +57,15 @@ public class Deque<Item> implements Iterable<Item> {
         Node newNode = createNode(item);
         
         if (isEmpty()) {
-            first = last = newNode;
+            first = newNode;
+            last = newNode;
         } else {
             Node oldLast = last;
             oldLast.next = newNode;
             newNode.previous = oldLast;
             last = newNode;
         }
-        N++;
+        n++;
     }
     
     private Node createNode(Item item) {
@@ -80,12 +81,13 @@ public class Deque<Item> implements Iterable<Item> {
         
         Item item = first.item;
         if (size() == 1) {
-            first = last = null;
+            first = null;
+            last = null;
         } else {
             first = first.next;
             first.previous = null;
         }
-        N--;
+        n--;
         return item;
     }
     
@@ -96,12 +98,13 @@ public class Deque<Item> implements Iterable<Item> {
         
         Item item = last.item;
         if (size() == 1) {
-            first = last = null;
+            first = null;
+            last = null;
         } else {
             last = last.previous;
             last.next = null;
         }
-        N--;
+        n--;
         return item;
     }
     
