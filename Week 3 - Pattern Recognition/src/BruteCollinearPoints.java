@@ -45,7 +45,7 @@ public class BruteCollinearPoints {
         for (int i = 0; i < points.length -1; i++) {
             for (int j = i + 1; j < points.length; j++) {
                 if (points[i] == null || points[j] == null) throw new NullPointerException("One of the points is null");
-                if (points[i].compareTo(points[j]) == 0)    throw new IllegalArgumentException(points[i].toString() + "point is repeated");
+                if (points[i].compareTo(points[j]) == 0)    throw new IllegalArgumentException(points[i] + "point is repeated");
             }
         }
     }
